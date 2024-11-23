@@ -1,28 +1,28 @@
-import React, {useEffect, useState} from 'react'
-import MovieCard from '../../components/MovieCard'
-import Pagination from '../../components/Pagination'
+import {useEffect, useState} from 'react'
+import MovieCard from '../MovieCard'
+import Pagination from '../Pagination'
 import './style.css'
 
-const Upcoming = () => {
+const TopRated = () => {
   const [movies, setMovies] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
 
-  const fetchUpcomingMovies = async (page = 1) => {
+  const fetchTopRatedMovies = async (page = 1) => {
     const apiKey = '52d38f600d3a8f6797c2b24e51d7db0e'
     const response = await fetch(
-      `https://api.themoviedb.org/3/movie/upcoming?api_key=${apiKey}&language=en-US&page=${page}`,
+      `https://api.themoviedb.org/3/movie/top_rated?api_key=${apiKey}&language=en-US&page=${page}`,
     )
     const data = await response.json()
     setMovies(data.results)
   }
 
   useEffect(() => {
-    fetchUpcomingMovies(currentPage)
+    fetchTopRatedMovies(currentPage)
   }, [currentPage])
 
   return (
-    <div className="upcoming-page">
-      <h2>Upcoming Movies</h2>
+    <div className="top-rated-page">
+      <h2>Top Rated Movies</h2>
       <div className="movies-grid">
         {movies.map(movie => (
           <MovieCard key={movie.id} movie={movie} />
@@ -37,4 +37,4 @@ const Upcoming = () => {
   )
 }
 
-export default Upcoming
+export default TopRated

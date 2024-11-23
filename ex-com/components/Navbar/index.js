@@ -1,17 +1,15 @@
-import {useState} from 'react'
-import {Link, useHistory} from 'react-router-dom' // Use useHistory instead of useNavigate
+import React, {useState} from 'react'
+import {Link, useNavigate} from 'react-router-dom'
 import './style.css'
 
 const Navbar = () => {
   const [query, setQuery] = useState('')
   const [isNavbarOpen, setIsNavbarOpen] = useState(false) // Track navbar toggle state
-  const history = useHistory() // Using useHistory to navigate programmatically
+  const navigate = useNavigate()
 
   const handleSearch = e => {
     e.preventDefault()
-    if (query) {
-      history.push(`/search?query=${query}`)
-    }
+    if (query) navigate(`/search?query=${query}`)
   }
 
   const toggleNavbar = () => {
@@ -27,7 +25,6 @@ const Navbar = () => {
       </div>
       {/* Change the div to a button and add aria-label for accessibility */}
       <button
-        type="button"
         className="navbar-toggle"
         onClick={toggleNavbar}
         aria-label="Toggle navigation menu"

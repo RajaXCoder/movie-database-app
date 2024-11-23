@@ -1,25 +1,43 @@
 import React, {useEffect, useState} from 'react'
 import {useParams} from 'react-router-dom'
 
-import axios from 'axios'
 import './style.css'
 
 const MovieDetails = props => {
   const [movie, setMovie] = useState({})
   const [cast, setCast] = useState([])
-  // const movieId = match
   const {id} = useParams()
   console.log(id)
+
   useEffect(() => {
     const apiKey = '52d38f600d3a8f6797c2b24e51d7db0e'
 
-    axios
-      .get(`https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}`)
-      .then(res => setMovie(res.data))
-    axios
-      .get(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${apiKey}`)
-      .then(res => setCast(res.data.cast))
-  }, [])
+    const fetchMovieDetails = async () => {
+      try {
+        const movieResponse = await fetch(
+          `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}`,
+        )
+        if (!movieResponse.ok) {
+          throw new Error('Failed to fetch movie details')
+        }
+        const movieData = await movieResponse.json()
+        setMovie(movieData)
+
+        const castResponse = await fetch(
+          `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${apiKey}`,
+        )
+        if (!castResponse.ok) {
+          throw new Error('Failed to fetch cast details')
+        }
+        const castData = await castResponse.json()
+        setCast(castData.cast)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+
+    fetchMovieDetails()
+  }, [id])
 
   return (
     <div className="movie-details">
@@ -33,9 +51,9 @@ const MovieDetails = props => {
       </div>
       <div className="movie-cast">
         <h3>Cast</h3>
-        <div className="cast-grid">
+        <ul className="cast-grid">
           {cast.map(member => (
-            <div key={member.id} className="cast-card">
+            <li key={member.id} className="cast-card">
               <img
                 src={`https://image.tmdb.org/t/p/w500${member.profile_path}`}
                 alt={member.name}
@@ -43,9 +61,9 @@ const MovieDetails = props => {
               <p>
                 {member.name} as {member.character}
               </p>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </div>
   )

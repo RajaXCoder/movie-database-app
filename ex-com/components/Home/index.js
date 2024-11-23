@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react'
-import axios from 'axios'
-import MovieCard from '../../components/MovieCard'
-import Pagination from '../../components/Pagination'
+import MovieCard from '../MovieCard'
+import Pagination from '../Pagination'
 import './style.css'
 
 const Home = () => {
@@ -11,11 +10,22 @@ const Home = () => {
 
   useEffect(() => {
     const apiKey = '52d38f600d3a8f6797c2b24e51d7db0e'
-    axios
-      .get(
-        `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&page=${currentPage}`,
-      )
-      .then(res => setMovies(res.data.results))
+    const fetchMovies = async () => {
+      try {
+        const response = await fetch(
+          `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&page=${currentPage}`,
+        )
+        if (!response.ok) {
+          throw new Error('Failed to fetch movies')
+        }
+        const data = await response.json()
+        setMovies(data.results)
+      } catch (error) {
+        console.error('Error fetching movies:', error)
+      }
+    }
+
+    fetchMovies()
   }, [currentPage])
 
   return (

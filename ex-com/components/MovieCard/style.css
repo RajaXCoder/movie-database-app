@@ -23,7 +23,7 @@
   color: #555;
 }
 
-.movie-card button {
+.movie-card a {
   display: inline-block;
   margin: 10px 0;
   padding: 5px 15px;
@@ -31,11 +31,9 @@
   color: white;
   text-decoration: none;
   border-radius: 5px;
-  border: none;
-  outline: none;
 }
 
-.movie-card button:hover {
+.movie-card a:hover {
   background-color: #008c9e;
 }
 
